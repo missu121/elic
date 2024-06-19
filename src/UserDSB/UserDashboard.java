@@ -716,7 +716,7 @@ public class UserDashboard extends javax.swing.JFrame {
                 pstmt.setString(1, cons.getId());
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
-                        meterId.setText(rs.getString("t_id"));
+                        meterId.setText(rs.getString("u_id"));
                         unit.setText(rs.getString("t_unit"));
                         month.setText(rs.getString("t_month"));
                         tax.setText(rs.getString("t_tax"));
@@ -808,7 +808,7 @@ public class UserDashboard extends javax.swing.JFrame {
             try {
                 new DBConnector().insertData("update transaction set t_month = '" + month.getText() + "', t_tax = '" + tax.getText() + "', "
                         + "t_unit = '" + unit.getText() + "', t_total = '" + totalBill.getText() + "', t_reference = '" + reference.getText() + "', "
-                        + "t_payment = '" + payment.getSelectedItem() + "', t_status = 'PAID'");
+                        + "t_payment = '" + payment.getSelectedItem() + "', t_status = 'PAID' where u_id = '" + meterId.getText() + "'");
 
                 JOptionPane.showMessageDialog(this, "PAYMENT HAS BEEN PROCESSED!", "SUCCESS", INFORMATION_MESSAGE);
 
