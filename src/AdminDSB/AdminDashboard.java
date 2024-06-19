@@ -458,7 +458,7 @@ public class AdminDashboard extends javax.swing.JFrame {
 
     private void displayPending() {
         try {
-            ResultSet rs = new DBConnector().getData("select id,email,username,type from bill where status = 'PENDING'");
+            ResultSet rs = new DBConnector().getData("select * from bill where status = 'PENDING'");
             data1.setModel(DbUtils.resultSetToTableModel(rs));
         } catch (SQLException e) {
             System.err.println("An error occurred while fetching data: " + e.getMessage());
@@ -475,13 +475,13 @@ public class AdminDashboard extends javax.swing.JFrame {
     }
 
     private void acceptAccount() {
-        int rowIndex = pendings.getSelectedRow();
+        int rowIndex = data1.getSelectedRow();
         if (rowIndex < 0) {
             errorMessage("PLEASE SELECT AN INDEX!");
         } else {
             try {
-                TableModel tbl = pendings.getModel();
-                new DBConnector().updateData("UPDATE bill SET status = 'ACTIVE' WHERE id = '" + tbl.getValueAt(rowIndex, 0).toString() + "'");
+                TableModel tbl = data1.getModel();
+                new DBConnector().updateData("UPDATE bill SET status = 'ACTIVE' WHERE id = '" + tbl.getValueAt(rowIndex, 0) + "'");
                 successMessage("ACCOUNT APPROVED SUCCESSFULLY!!");
                 displayPending();
             } catch (SQLException er) {
@@ -491,12 +491,12 @@ public class AdminDashboard extends javax.swing.JFrame {
     }
 
     private void declineAccount() {
-        int rowIndex = pendings.getSelectedRow();
+        int rowIndex = data1.getSelectedRow();
         if (rowIndex < 0) {
             errorMessage("PLEASE SELECT AN INDEX!");
         } else {
             try {
-                TableModel tbl = pendings.getModel();
+                TableModel tbl = data1.getModel();
                 new DBConnector().updateData("UPDATE bill SET status = 'DECLINED' WHERE id = '" + tbl.getValueAt(rowIndex, 0).toString() + "'");
                 successMessage("ACCOUNT HAS BEEN DISAPPROVED!");
                 displayPending();
