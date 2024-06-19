@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 22, 2024 at 05:37 AM
+-- Generation Time: Jun 19, 2024 at 04:38 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,7 +44,8 @@ CREATE TABLE `bill` (
 
 INSERT INTO `bill` (`id`, `email`, `contact`, `username`, `password`, `status`, `type`, `image`) VALUES
 (14, '', '12312312312', 'USERNAME', 'tA0DOG+4/X3GypxvjWgN/FjWD9bqcsY/VzzFv7sJaVdGqEnJFRfCNc3+rKTnNCCPGEvAiq4GeXdImI6Vko+AsQ==', 'ACTIVE', 'ADMIN', 'src/ImageDB/2.png'),
-(16, '1', '12312312312', '12321321321', 'tA0DOG+4/X3GypxvjWgN/FjWD9bqcsY/VzzFv7sJaVdGqEnJFRfCNc3+rKTnNCCPGEvAiq4GeXdImI6Vko+AsQ==', 'ACTIVE', 'CUSTOMER', 'src/ImageDB/2.png');
+(16, '1', '12312312312', '12321321321', 'tA0DOG+4/X3GypxvjWgN/FjWD9bqcsY/VzzFv7sJaVdGqEnJFRfCNc3+rKTnNCCPGEvAiq4GeXdImI6Vko+AsQ==', 'ACTIVE', 'CUSTOMER', 'src/ImageDB/2.png'),
+(17, 'potangina@gmail.com', '11111111111', 'ataty', 'tA0DOG+4/X3GypxvjWgN/FjWD9bqcsY/VzzFv7sJaVdGqEnJFRfCNc3+rKTnNCCPGEvAiq4GeXdImI6Vko+AsQ==', 'ACTIVE', 'ADMIN', 'src/ImageDB/circle-user.png');
 
 -- --------------------------------------------------------
 
@@ -54,6 +55,7 @@ INSERT INTO `bill` (`id`, `email`, `contact`, `username`, `password`, `status`, 
 
 CREATE TABLE `transaction` (
   `t_id` int(50) NOT NULL,
+  `u_id` int(50) NOT NULL,
   `t_month` varchar(50) NOT NULL,
   `t_tax` varchar(50) NOT NULL,
   `t_unit` varchar(50) NOT NULL,
@@ -67,8 +69,8 @@ CREATE TABLE `transaction` (
 -- Dumping data for table `transaction`
 --
 
-INSERT INTO `transaction` (`t_id`, `t_month`, `t_tax`, `t_unit`, `t_total`, `t_reference`, `t_payment`, `t_status`) VALUES
-(16, 'JANUARY', 'VAT (VALUE ADDED TAX)  RATE  = 20%', '200', '240.0', '0bvfRc31EJFvb1C', 'GCASH', 'PAID');
+INSERT INTO `transaction` (`t_id`, `u_id`, `t_month`, `t_tax`, `t_unit`, `t_total`, `t_reference`, `t_payment`, `t_status`) VALUES
+(2, 16, 'JANUARY', '20%', '500', '600.0', 'QvWZN1rC9gyT0Nl', 'GCASH', 'PAID');
 
 --
 -- Indexes for dumped tables
@@ -84,7 +86,8 @@ ALTER TABLE `bill`
 -- Indexes for table `transaction`
 --
 ALTER TABLE `transaction`
-  ADD PRIMARY KEY (`t_id`);
+  ADD PRIMARY KEY (`t_id`),
+  ADD KEY `users id` (`u_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -94,13 +97,13 @@ ALTER TABLE `transaction`
 -- AUTO_INCREMENT for table `bill`
 --
 ALTER TABLE `bill`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `transaction`
 --
 ALTER TABLE `transaction`
-  MODIFY `t_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `t_id` int(50) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

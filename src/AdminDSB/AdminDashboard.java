@@ -384,7 +384,6 @@ public class AdminDashboard extends javax.swing.JFrame {
         customizeButton(print22);
         customizeButton(logout1);
         customizeButton(logout2);
-        customizeButton(logout3);
         customizeButton(logout5);
         customizeButton(logout4);
         customizeButton(logout6);
@@ -519,7 +518,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel14 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
@@ -606,7 +604,6 @@ public class AdminDashboard extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         pendings = new javax.swing.JTable();
         logout2 = new javax.swing.JButton();
-        logout3 = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
         jLabel19 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -636,10 +633,6 @@ public class AdminDashboard extends javax.swing.JFrame {
             }
         });
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel14.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel14.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(jPanel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 1310, 50));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -1410,17 +1403,6 @@ public class AdminDashboard extends javax.swing.JFrame {
         });
         jPanel11.add(logout2, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 650, 240, 30));
 
-        logout3.setBackground(new java.awt.Color(20, 161, 242));
-        logout3.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        logout3.setForeground(new java.awt.Color(255, 255, 255));
-        logout3.setText("PAID");
-        logout3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                logout3ActionPerformed(evt);
-            }
-        });
-        jPanel11.add(logout3, new org.netbeans.lib.awtextra.AbsoluteConstraints(900, 650, 240, 30));
-
         jTabbedPane1.addTab("tab2", jPanel11);
 
         jPanel12.setBackground(new java.awt.Color(255, 255, 255));
@@ -1881,33 +1863,31 @@ public class AdminDashboard extends javax.swing.JFrame {
 
     private void print17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_print17ActionPerformed
         try {
-            String query = "SELECT * FROM transaction WHERE t_id = ?";
-            try (PreparedStatement pstmt = new DBConnector().getConnection().prepareStatement(query)) {
-                pstmt.setString(1, id1.getText());
-                try (ResultSet rs = pstmt.executeQuery()) {
-                    if (rs.next()) {
-                        meterId.setText(rs.getString("t_id"));
-                        unit.setText(rs.getString("t_unit"));
-                        month.setSelectedItem(rs.getString("t_month"));
-                        totalBill.setText(rs.getString("t_total"));
-                        reference.setText(rs.getString("t_reference"));
+            String query = "SELECT * FROM transaction WHERE u_id = '" + id1.getText() + "'";
+            try {
+                ResultSet rs = new DBConnector().getData(query);
+                if (rs.next()) {
+                    meterId.setText(rs.getString("u_id"));
+                    unit.setText(rs.getString("t_unit"));
+                    month.setSelectedItem(rs.getString("t_month"));
+                    totalBill.setText(rs.getString("t_total"));
+                    reference.setText(rs.getString("t_reference"));
 
-                        SwingUtilities.invokeLater(() -> {
-                            jTabbedPane1.setSelectedIndex(5);
-                        });
-                    } else {
+                    SwingUtilities.invokeLater(() -> {
                         jTabbedPane1.setSelectedIndex(5);
-                        meterId.setText(rs.getString("t_id"));
-                        unit.setText("UNIT = ₱100 PER UNIT");
-                        totalBill.setText("TOTAL BILL");
-                        reference.setText("REFERENCE CODE");
-                    }
+                    });
+                } else {
+                    jTabbedPane1.setSelectedIndex(5);
+                    meterId.setText(id1.getText());
+                    unit.setText("UNIT = ₱100 PER UNIT");
+                    totalBill.setText("TOTAL BILL");
+                    reference.setText("REFERENCE CODE");
                 }
+            } catch (SQLException e) {
+                System.out.println("Unexpected ERROR: " + e.getMessage());
             }
-        } catch (SQLException er) {
+        } catch (Exception er) {
             System.out.println("ERROR: " + er.getMessage());
-        } catch (Exception e) {
-            System.out.println("Unexpected ERROR: " + e.getMessage());
         }
 
     }//GEN-LAST:event_print17ActionPerformed
@@ -1987,24 +1967,18 @@ public class AdminDashboard extends javax.swing.JFrame {
         try {
             if (!validationCheckerForBillStatement()) {
             } else {
-                new DBConnector().insertData("insert into transaction (t_month, t_tax, t_unit, t_total, t_reference, t_id, t_status) "
-                        + "values ('" + month.getSelectedItem() + "', '" + tax.getText() + "', "
-                        + "'" + unit.getText() + "', '" + totalBill.getText() + "', '" + reference.getText() + "', '" + id1.getText() + "', 'UNPAID')");
+                new DBConnector().insertData("insert into transaction (u_id, t_month, t_tax, t_unit, t_total, t_reference, t_status) "
+                        + "values ('" + meterId.getText() + "','" + month.getSelectedItem() + "', '20%', "
+                        + "'" + unit.getText() + "', '" + totalBill.getText() + "', '" + reference.getText() + "', 'UNPAID')");
 
-                DBConnector db = new DBConnector();
-                ResultSet rs = db.getData("select * from bill where id = '" + id1.getText() + "'");
+                JOptionPane.showMessageDialog(this, "BILL UPDATED SUCCESSFULLY!", "SUCCESS", INFORMATION_MESSAGE);
 
-                if (rs.next()) {
-                    JOptionPane.showMessageDialog(this, "BILL UPDATED SUCCESSFULLY!", "SUCCESS", INFORMATION_MESSAGE);
-
-                    new AdminDashboard().setVisible(true);
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this, "BILL NOT FOUND!", "ERROR", ERROR_MESSAGE);
-                }
+                new AdminDashboard().setVisible(true);
+                dispose();
             }
         } catch (SQLException er) {
-            System.out.println("Error: " + er.getMessage());
+            JOptionPane.showMessageDialog(this, "BILL NOT FOUND!", "ERROR", ERROR_MESSAGE);
+            System.out.println(er.getMessage());
         }
     }//GEN-LAST:event_print22ActionPerformed
 
@@ -2016,10 +1990,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private void logout2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logout2ActionPerformed
         jTabbedPane1.setSelectedIndex(0);
     }//GEN-LAST:event_logout2ActionPerformed
-
-    private void logout3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logout3ActionPerformed
-        approvePayment();
-    }//GEN-LAST:event_logout3ActionPerformed
 
     private void logout4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logout4ActionPerformed
         MessageFormat header = new MessageFormat("Recently Paid Customers Reports");
@@ -2133,7 +2103,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel13;
-    private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -2150,7 +2119,6 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JButton logout;
     private javax.swing.JButton logout1;
     private javax.swing.JButton logout2;
-    private javax.swing.JButton logout3;
     private javax.swing.JButton logout4;
     private javax.swing.JButton logout5;
     private javax.swing.JButton logout6;

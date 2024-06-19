@@ -711,7 +711,7 @@ public class UserDashboard extends javax.swing.JFrame {
     private void print13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_print13ActionPerformed
         try {
             Container cons = Container.getInstance();
-            String query = "SELECT * FROM transaction WHERE t_id = ?";
+            String query = "SELECT * FROM transaction WHERE u_id = ?";
             try (PreparedStatement pstmt = new DBConnector().getConnection().prepareStatement(query)) {
                 pstmt.setString(1, cons.getId());
                 try (ResultSet rs = pstmt.executeQuery()) {
@@ -808,7 +808,7 @@ public class UserDashboard extends javax.swing.JFrame {
             try {
                 new DBConnector().insertData("update transaction set t_month = '" + month.getText() + "', t_tax = '" + tax.getText() + "', "
                         + "t_unit = '" + unit.getText() + "', t_total = '" + totalBill.getText() + "', t_reference = '" + reference.getText() + "', "
-                        + "t_payment = '" + payment.getSelectedItem() + "', t_status = 'UNPAID'");
+                        + "t_payment = '" + payment.getSelectedItem() + "', t_status = 'PAID'");
 
                 JOptionPane.showMessageDialog(this, "PAYMENT HAS BEEN PROCESSED!", "SUCCESS", INFORMATION_MESSAGE);
 
